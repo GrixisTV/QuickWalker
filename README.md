@@ -46,7 +46,7 @@ Control which types of entities can be right-clicked to walk to:
 - **Enable for Ground Tiles**: Enable right-click walking for ground tiles.
 - **Enable for NPCs**: Enable right-click walking to walk to an NPC's location.
 - **Enable for Players**: Enable right-click walking to walk to another player's location.
-- **Enable for Game Objects**: Enable right-click walking to walk to game objects (trees, rocks, etc.).
+  
 
 ## Development
 
