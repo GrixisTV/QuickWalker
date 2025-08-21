@@ -3,10 +3,11 @@ package com.example;
 import java.awt.event.MouseEvent;
 import javax.inject.Inject;
 import net.runelite.api.Client;
-import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
 import net.runelite.client.input.MouseListener;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class QuickWalkerInputListener implements MouseListener
 {
     @Inject
@@ -39,31 +40,30 @@ public class QuickWalkerInputListener implements MouseListener
                 // Check if shift is required and if it's being held
                 if (config.shiftRightClick() && !e.isShiftDown())
                 {
-                    return e;
+                    return e; // Do not consume if shift is required but not held
                 }
 
-                // Find the "Walk here" option in the menu
                 MenuEntry[] menuEntries = client.getMenuEntries();
+                MenuEntry walkHereEntry = null;
+
+                // Iterate through menu entries to find "Walk here"
                 for (int i = menuEntries.length - 1; i >= 0; i--)
                 {
                     MenuEntry entry = menuEntries[i];
                     if (entry.getOption().equals("Walk here"))
                     {
-                        // Select the "Walk here" option
-                        client.setSelectedItemIndex(i);
-                        client.invokeMenuAction(
-                            entry.getOption(),
-                            entry.getTarget(),
-                            entry.getIdentifier(),
-                            entry.getOpcode(),
-                            entry.getParam0(),
-                            entry.getParam1()
-                        );
-                        
-                        // Consume the event to prevent the context menu from showing
-                        e.consume();
+                        walkHereEntry = entry;
                         break;
                     }
+                }
+
+                if (walkHereEntry != null)
+                {
+                    // Select the "Walk here" option by setting it as the only menu entry
+                    client.setMenuEntries(new MenuEntry[]{walkHereEntry});
+                    
+                    // Consume the event to prevent the context menu from showing
+                    e.consume();
                 }
             }
         }

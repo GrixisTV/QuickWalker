@@ -1,32 +1,63 @@
 plugins {
     id 'java'
+    id 'checkstyle'
 }
 
 repositories {
     mavenLocal()
     maven {
         url = 'https://repo.runelite.net'
+        content {
+            includeGroupByRegex("net\\.runelite.*")
+        }
     }
     mavenCentral()
 }
 
-def runeLiteVersion = '1.10.14'
+def runeLiteVersion = 'latest.release'
 
 dependencies {
-    compileOnly group: 'net.runelite', name: 'client', version: runeLiteVersion
+    compileOnly group: 'net.runelite', name:'client', version: runeLiteVersion
     
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
     
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation group: 'net.runelite', name: 'client', version: runeLiteVersion
+    testImplementation 'junit:junit:4.12'
+    testImplementation group: 'net.runelite', name:'client', version: runeLiteVersion
+    testImplementation group: 'net.runelite', name:'jshell', version: runeLiteVersion
 }
 
 group = 'com.quickwalker'
 version = '1.0-SNAPSHOT'
-sourceCompatibility = '11'
-targetCompatibility = '11'
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
+    options.release.set(11) // Set to Java 11 for RuneLite compatibility
+}
+
+// Configure the jar task
+jar {
+    manifest {
+        attributes(
+            'Plugin-Version': project.version,
+            'Plugin-Id': 'quick-walker',
+            'Plugin-Provider': 'GrixisTV',
+            'Plugin-Description': 'Enhances movement by allowing quick right-click walking',
+            'Plugin-License': 'BSD-2-Clause',
+            'Plugin-Class': 'com.example.QuickWalkerPlugin'
+        )
+    }
+    
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+checkstyle {
+    toolVersion = '8.29'
+    configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
+    showViolations = true
+    ignoreFailures = true
 }

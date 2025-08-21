@@ -3,23 +3,21 @@ package com.example;
 import com.google.inject.Provides;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
-import net.runelite.api.MenuAction;
-import net.runelite.api.MenuEntry;
-import net.runelite.api.events.ClientTick;
-import net.runelite.api.events.MenuOpened;
+import net.runelite.api.GameState;
+import net.runelite.api.events.GameStateChanged;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.MouseManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
-import java.awt.event.MouseEvent;
 
 @Slf4j
 @PluginDescriptor(
-    name = "Quick Walker",
-    description = "Enhances movement by allowing quick right-click walking without menu selection",
-    tags = {"walking", "movement", "qol", "mouse", "navigation"}
+    name = "ZZZ Quick Walker Test",
+    description = "Enhances movement by allowing quick right-click walking for tiles, NPCs, players, and objects",
+    tags = {"walking", "movement", "qol", "mouse", "navigation", "npc", "player"}
 )
 public class QuickWalkerPlugin extends Plugin
 {
@@ -40,6 +38,10 @@ public class QuickWalkerPlugin extends Plugin
     {
         log.info("Quick Walker plugin started!");
         mouseManager.registerMouseListener(inputListener);
+        if (client.getGameState() == GameState.LOGGED_IN)
+        {
+            sendLoginMessage();
+        }
     }
 
     @Override
@@ -50,25 +52,29 @@ public class QuickWalkerPlugin extends Plugin
     }
 
     @Subscribe
-    public void onMenuOpened(MenuOpened event)
+    public void onGameStateChanged(GameStateChanged gameStateChanged)
     {
-        if (!config.enabled())
+        if (gameStateChanged.getGameState() == GameState.LOGGED_IN)
         {
-            return;
+            sendLoginMessage();
         }
-
-        // This is where we can modify the menu if needed
     }
 
-    @Subscribe
-    public void onClientTick(ClientTick event)
+    private void sendLoginMessage()
     {
-        if (!config.enabled() || client.isMenuOpen())
+        if (config.enabled())
         {
-            return;
+            String message = "Quick Walker plugin active. ";
+            if (config.shiftRightClick())
+            {
+                message += "Hold Shift + Right-Click to walk.";
+            }
+            else
+            {
+                message += "Right-Click to walk.";
+            }
+            client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", message, null);
         }
-
-        // Additional logic can be added here if needed
     }
 
     @Provides
