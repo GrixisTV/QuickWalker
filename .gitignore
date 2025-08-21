@@ -1,0 +1,41 @@
+# Gradle files
+.gradle/
+build/
+gradle-app.setting
+
+# IntelliJ IDEA files
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Compiled class files
+*.class
+
+# Log files
+*.log
+
+# Package files
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Virtual machine crash logs
+hs_err_pid*
+
+# Windows-specific files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# macOS-specific files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Gradle wrapper jar file
+!gradle/wrapper/gradle-wrapper.jar
