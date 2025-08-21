@@ -27,7 +27,7 @@ dependencies {
     testImplementation group: 'net.runelite', name:'jshell', version: runeLiteVersion
 }
 
-group = 'com.quickwalker'
+group = 'com.example'  // Changed back to com.example to match package structure
 version = '1.0-SNAPSHOT'
 
 tasks.withType(JavaCompile).configureEach {
@@ -40,7 +40,7 @@ jar {
     manifest {
         attributes(
             'Plugin-Version': project.version,
-            'Plugin-Id': 'quick-walker',
+            'Plugin-Id': 'zzz-quick-walker-test',  // Changed to match name in PluginDescriptor
             'Plugin-Provider': 'GrixisTV',
             'Plugin-Description': 'Enhances movement by allowing quick right-click walking',
             'Plugin-License': 'BSD-2-Clause',

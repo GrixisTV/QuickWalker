@@ -37,6 +37,7 @@ public class QuickWalkerPlugin extends Plugin
     protected void startUp() throws Exception
     {
         log.info("Quick Walker plugin started!");
+        System.out.println("Quick Walker plugin started! This is a debug message.");
         mouseManager.registerMouseListener(inputListener);
         if (client.getGameState() == GameState.LOGGED_IN)
         {
@@ -48,6 +49,7 @@ public class QuickWalkerPlugin extends Plugin
     protected void shutDown() throws Exception
     {
         log.info("Quick Walker plugin stopped!");
+        System.out.println("Quick Walker plugin stopped! This is a debug message.");
         mouseManager.unregisterMouseListener(inputListener);
     }
 
@@ -74,6 +76,7 @@ public class QuickWalkerPlugin extends Plugin
                 message += "Right-Click to walk.";
             }
             client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", message, null);
+            System.out.println("Quick Walker login message sent: " + message);
         }
     }
 
